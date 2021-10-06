@@ -3,11 +3,7 @@ using Andy.X.Bridge.Core.Utilities.Extensions.Json;
 using Andy.X.Bridge.Core.Utilities.Logging;
 using Andy.X.Bridge.IO.Locations;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Andy.X.Bridge.Core.Services
 {
@@ -49,16 +45,34 @@ namespace Andy.X.Bridge.Core.Services
             // checking if queue files exits
             if (File.Exists(AppLocations.GetQueueConfigurationFile()) == true)
             {
-                isQueueConfigImported = true;
-                queueConfiguration = File.ReadAllText(AppLocations.GetQueueConfigurationFile()).JsonToObject<QueueConfiguration>();
-                Logger.LogInformation($"Message Queue engines are imported successfully");
+                try
+                {
+                    isQueueConfigImported = true;
+                    queueConfiguration = File.ReadAllText(AppLocations.GetQueueConfigurationFile()).JsonToObject<QueueConfiguration>();
+                    Logger.LogInformation($"Message Queue engines are imported successfully");
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError($"Importing Queue engines file configuration is skipped, queues_config.json, please check the configuration file at path={AppLocations.GetQueueConfigurationFile()}; error details=", ex.Message);
+                    isQueueConfigImported = false;
+                }
             }
             else
             {
                 Logger.LogWarning($"Importing Queue engines file configuration is skipped, queues_config.json file does not exists; path={AppLocations.GetQueueConfigurationFile()}");
             }
 
-            andyXConfiguration = File.ReadAllText(AppLocations.GetAndyXConfigurationFile()).JsonToObject<AndyXConfiguration>();
+
+            try
+            {
+                andyXConfiguration = File.ReadAllText(AppLocations.GetAndyXConfigurationFile()).JsonToObject<AndyXConfiguration>();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError($"Importing configuration files failed, andyx_config.json, please check the configuration file at path={AppLocations.GetAndyXConfigurationFile()}; error details=", ex.Message);
+                throw new Exception("ANDYX-BRIDGE|[error]|importing|andyx_config.json|please check the configuration|path={AppLocations.GetAndyXConfigurationFile()}");
+            }
+
             Logger.LogInformation($"Andy X configuration settings are imported successfully");
         }
     }
