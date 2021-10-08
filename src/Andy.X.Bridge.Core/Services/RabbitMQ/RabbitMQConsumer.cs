@@ -1,5 +1,6 @@
 ﻿using Andy.X.Bridge.Core.Abstractions.Services;
 using Andy.X.Bridge.Core.Configurations;
+using Andy.X.Client;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -10,16 +11,20 @@ namespace Andy.X.Bridge.Core.Services.RabbitMQ
 {
     public class RabbitMQConsumer : IConsumer
     {
+        // Configurations
         private readonly AndyXConfiguration _andyXConfiguration;
-
         private readonly QueueEngine _queueEngine;
         private readonly QueueConfig _queueConfig;
 
+        // RabbitMQ
         private IConnectionFactory factory;
         private IConnection connection;
         private IModel channel;
+
         private Thread consumingThread;
 
+        // Andy X Producer
+        private Producer<Object> andyXProducer;
 
         public RabbitMQConsumer(AndyXConfiguration andyXConfiguration, QueueEngine queueEngine, QueueConfig queueConfig)
         {
@@ -27,7 +32,28 @@ namespace Andy.X.Bridge.Core.Services.RabbitMQ
             _queueEngine = queueEngine;
             _queueConfig = queueConfig;
 
+            InitializeAndyXProducer();
             InitializeConnection();
+        }
+
+        private void InitializeAndyXProducer()
+        {
+            XClient xClient = new XClient(new Client.Configurations.XClientConfiguration()
+            {
+                XNodeUrl = _andyXConfiguration.BrokerServiceUrls[0],
+                Tenant = _andyXConfiguration.Tenant,
+                Product = _andyXConfiguration.Product
+            });
+
+            andyXProducer = new Producer<Object>(xClient, new Client.Configurations.ProducerConfiguration()
+            {
+                Component = _queueConfig.TopicTo.Component,
+                Name = $"rabbit-mq-{_queueConfig.QueueName}",
+                RetryProducing = false,
+                Topic = $"{_queueConfig.TopicTo.Topic}"
+            });
+
+            andyXProducer.BuildAsync().Wait();
         }
 
         private void InitializeConnection()
@@ -57,7 +83,7 @@ namespace Andy.X.Bridge.Core.Services.RabbitMQ
             {
 
                 var body = e.Body;
-                //string message = Encoding.UTF8.GetString(e.Body);
+                string message = Encoding.UTF8.GetString(body.ToArray());
                 actualChannel.BasicAck(e.DeliveryTag, false);
             };
 

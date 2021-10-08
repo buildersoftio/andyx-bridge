@@ -17,6 +17,7 @@ namespace Andy.X.Bridge.Core.Services
         {
             isQueueConfigImported = false;
             ImportConfigurationFiles();
+            InitializeRabbitMQConsumerServices();
         }
 
         private void ImportConfigurationFiles()
@@ -74,6 +75,11 @@ namespace Andy.X.Bridge.Core.Services
             }
 
             Logger.LogInformation($"Andy X configuration settings are imported successfully");
+        }
+
+        private void InitializeRabbitMQConsumerServices()
+        {
+            throw new NotImplementedException();
         }
     }
 }
