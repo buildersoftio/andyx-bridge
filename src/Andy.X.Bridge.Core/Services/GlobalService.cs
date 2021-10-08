@@ -3,7 +3,9 @@ using Andy.X.Bridge.Core.Utilities.Extensions.Json;
 using Andy.X.Bridge.Core.Utilities.Logging;
 using Andy.X.Bridge.IO.Locations;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace Andy.X.Bridge.Core.Services
 {
@@ -12,6 +14,8 @@ namespace Andy.X.Bridge.Core.Services
         private AndyXConfiguration andyXConfiguration;
         private QueueConfiguration queueConfiguration;
         private bool isQueueConfigImported;
+
+        private List<Thread> rabbitMQThreads;
 
         public GlobalService()
         {
@@ -63,7 +67,6 @@ namespace Andy.X.Bridge.Core.Services
                 Logger.LogWarning($"Importing Queue engines file configuration is skipped, queues_config.json file does not exists; path={AppLocations.GetQueueConfigurationFile()}");
             }
 
-
             try
             {
                 andyXConfiguration = File.ReadAllText(AppLocations.GetAndyXConfigurationFile()).JsonToObject<AndyXConfiguration>();
@@ -79,7 +82,26 @@ namespace Andy.X.Bridge.Core.Services
 
         private void InitializeRabbitMQConsumerServices()
         {
-            throw new NotImplementedException();
+            foreach (var queueEngine in queueConfiguration.Engines)
+            {
+                if (queueEngine.Engine == QueueEngineTypes.RabbitMQ)
+                {
+                    foreach (var configs in queueEngine.Queues)
+                    {
+                        var thread = new Thread(() =>
+                        {
+
+                            new RabbitMQ.RabbitMQConsumer(andyXConfiguration, queueEngine, configs)
+                                .StartConsuming();
+
+                            Logger.LogInformation($"RabbitMQ consumer of queue [{configs.QueueName}] has been initialized");
+                        });
+
+                        rabbitMQThreads.Add(thread);
+                        thread.Start();
+                    }
+                }
+            }
         }
     }
 }

@@ -5,6 +5,5 @@
         public string[] BrokerServiceUrls { get; set; }
         public string Tenant { get; set; }
         public string Product { get; set; }
-        public string Component { get; set; }
     }
 }
