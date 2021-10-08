@@ -25,6 +25,11 @@ namespace Andy.X.Bridge.IO.Locations
         {
             return Path.Combine(GetRootDirectory(), "templates");
         }
+
+        public static string LogsDirectory()
+        {
+            return Path.Combine(GetRootDirectory(), "logs");
+        }
         #endregion
 
         #region Configuration Files
@@ -37,6 +42,12 @@ namespace Andy.X.Bridge.IO.Locations
         {
             return Path.Combine(ConfigDirectory(), "queues_config.json");
         }
+
+        public static string GetLogConfigurationFile()
+        {
+            return Path.Combine(LogsDirectory(), $"xbridge-{DateTime.Now:dd-MM-YYYY}.log");
+        }
+
         #endregion
     }
 }
