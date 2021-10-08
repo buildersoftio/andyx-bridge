@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Buildersoft.Andy.X.Client" Version="2.0.2-preview" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Andy.X.Bridge.IO\Andy.X.Bridge.IO.csproj" />
   </ItemGroup>
 
