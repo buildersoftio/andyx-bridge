@@ -1,14 +1,13 @@
 ﻿using Andy.X.Bridge.IO.Locations;
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Text;
 
 namespace Andy.X.Bridge.Core.Utilities.Logging
 {
     public class LoggerSink
     {
-        private FileStream fileStream;
-        private StreamWriter streamWriter;
-        private TextWriter textWriter;
         public LoggerSink()
         {
             if (Directory.Exists(AppLocations.LogsDirectory()) != true)
@@ -19,12 +18,19 @@ namespace Andy.X.Bridge.Core.Utilities.Logging
 
         public void InitializeSink()
         {
-            fileStream = new FileStream(AppLocations.GetLogConfigurationFile(), FileMode.OpenOrCreate);
-            textWriter = Console.Out;
-            streamWriter = new StreamWriter(fileStream);
-            streamWriter.AutoFlush = true;
+            Trace.Listeners.Clear();
 
-            Console.SetOut(streamWriter);
+            TextWriterTraceListener twtl = new TextWriterTraceListener(AppLocations.GetLogConfigurationFile(),
+                AppDomain.CurrentDomain.FriendlyName);
+            twtl.Name = "TextLogger";
+            twtl.TraceOutputOptions = TraceOptions.ThreadId | TraceOptions.DateTime;
+
+            ConsoleTraceListener ctl = new ConsoleTraceListener(false);
+            ctl.TraceOutputOptions = TraceOptions.DateTime;
+
+            Trace.Listeners.Add(twtl);
+            Trace.Listeners.Add(ctl);
+            Trace.AutoFlush = true;
         }
     }
 }
