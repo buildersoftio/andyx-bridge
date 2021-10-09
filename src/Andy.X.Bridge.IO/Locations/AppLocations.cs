@@ -45,7 +45,7 @@ namespace Andy.X.Bridge.IO.Locations
 
         public static string GetLogConfigurationFile()
         {
-            return Path.Combine(LogsDirectory(), $"xbridge-{DateTime.Now:dd-MM-YYYY}.log");
+            return Path.Combine(LogsDirectory(), $"xbridge-{DateTime.Now:dd-MM-yyyy}.log");
         }
 
         #endregion

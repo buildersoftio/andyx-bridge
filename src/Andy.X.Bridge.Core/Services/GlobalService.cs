@@ -82,26 +82,27 @@ namespace Andy.X.Bridge.Core.Services
 
         private void InitializeRabbitMQConsumerServices()
         {
-            foreach (var queueEngine in queueConfiguration.Engines)
-            {
-                if (queueEngine.Engine == QueueEngineTypes.RabbitMQ)
+            if (isQueueConfigImported == true)
+                foreach (var queueEngine in queueConfiguration.Engines)
                 {
-                    foreach (var configs in queueEngine.Queues)
+                    if (queueEngine.Engine == QueueEngineTypes.RabbitMQ)
                     {
-                        var thread = new Thread(() =>
+                        foreach (var configs in queueEngine.Queues)
                         {
+                            var thread = new Thread(() =>
+                            {
 
-                            new RabbitMQ.RabbitMQConsumer(andyXConfiguration, queueEngine, configs)
-                                .StartConsuming();
+                                new RabbitMQ.RabbitMQConsumer(andyXConfiguration, queueEngine, configs)
+                                    .StartConsuming();
 
-                            Logger.LogInformation($"RabbitMQ consumer of queue [{configs.QueueName}] has been initialized");
-                        });
+                                Logger.LogInformation($"RabbitMQ consumer of queue [{configs.QueueName}] has been initialized");
+                            });
 
-                        rabbitMQThreads.Add(thread);
-                        thread.Start();
+                            rabbitMQThreads.Add(thread);
+                            thread.Start();
+                        }
                     }
                 }
-            }
         }
     }
 }
