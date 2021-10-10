@@ -52,12 +52,15 @@ namespace Andy.X.Bridge.Core.Services.RabbitMQ
                 RetryProducing = false,
                 Topic = $"{_queueConfig.TopicTo.Topic}"
             });
-
-            andyXProducer.BuildAsync().Wait();
         }
 
         private void InitializeConnection()
         {
+            if (_queueEngine.Hostname == "" || _queueEngine.Port == null)
+            {
+                throw new Exception("RabbitMQ adapter, Please provide 'Hostname' and the 'Port' on configuration file");
+            }
+
             factory = new ConnectionFactory() { HostName = _queueEngine.Hostname, UserName = _queueEngine.Username, Password = _queueEngine.Password, Port = _queueEngine.Port };
             connection = factory.CreateConnection();
             StartConsuming();
@@ -65,6 +68,8 @@ namespace Andy.X.Bridge.Core.Services.RabbitMQ
 
         public void StartConsuming()
         {
+            andyXProducer.BuildAsync().Wait();
+
             consumingThread = new Thread(() =>
             {
                 ConsumerWorker(_queueConfig);
@@ -84,6 +89,10 @@ namespace Andy.X.Bridge.Core.Services.RabbitMQ
 
                 var body = e.Body;
                 string message = Encoding.UTF8.GetString(body.ToArray());
+
+                // Produce to Andy X
+                andyXProducer.ProduceAsync(message);
+
                 actualChannel.BasicAck(e.DeliveryTag, false);
             };
 
@@ -92,7 +101,8 @@ namespace Andy.X.Bridge.Core.Services.RabbitMQ
 
         public void StopConsuming()
         {
-            throw new NotImplementedException();
+            connection.Abort();
+            andyXProducer.CloseAsync().Wait();
         }
     }
 }

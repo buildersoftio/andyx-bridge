@@ -14,6 +14,9 @@ namespace Andy.X.Bridge.Core.Configurations
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public QueueEngineTypes Engine { get; set; }
 
+
+        // we use ServiceUrl for Kafka, Pulsar and Andy X
+        public string ServiceUrl { get; set; }
         public string Hostname { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
@@ -23,7 +26,10 @@ namespace Andy.X.Bridge.Core.Configurations
 
     public enum QueueEngineTypes
     {
-        RabbitMQ
+        RabbitMQ,
+        Kafka,
+        Pulsar,
+        AndyX
     }
 
     public class QueueConfig
