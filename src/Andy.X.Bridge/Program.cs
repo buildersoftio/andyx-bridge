@@ -15,9 +15,7 @@ namespace Andy.X.Bridge
             loggerSink = new LoggerSink();
             loggerSink.InitializeSink();
 
-            Trace.WriteLine("Buildersoft Andy X Bridge");
-            Trace.WriteLine("Version 1.0.0-alpha");
-            Trace.WriteLine("Andy X Bridge is an open-source distributed solution for integrating clusters of Andy X, Kafka, Pulsar and Message Queue Systems together.\n");
+            Logger.ShowWelcomeText();
 
             globalService = new GlobalService();
             Logger.LogInformation("Andy X Bridge is ready");

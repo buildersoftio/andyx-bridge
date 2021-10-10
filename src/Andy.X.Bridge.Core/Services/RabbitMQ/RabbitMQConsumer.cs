@@ -60,6 +60,7 @@ namespace Andy.X.Bridge.Core.Services.RabbitMQ
             {
                 throw new Exception("RabbitMQ adapter, Please provide 'Hostname' and the 'Port' on configuration file");
             }
+
             factory = new ConnectionFactory() { HostName = _queueEngine.Hostname, UserName = _queueEngine.Username, Password = _queueEngine.Password, Port = _queueEngine.Port };
             connection = factory.CreateConnection();
             StartConsuming();
