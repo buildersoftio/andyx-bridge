@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31606.5
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andy.X.Bridge", "src\Andy.X.Bridge\Andy.X.Bridge.csproj", "{D58E1C58-BE6D-4CE7-8D7C-7AE087D3E8C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Andy.X.Bridge", "src\Andy.X.Bridge\Andy.X.Bridge.csproj", "{D58E1C58-BE6D-4CE7-8D7C-7AE087D3E8C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andy.X.Bridge.Core", "src\Andy.X.Bridge.Core\Andy.X.Bridge.Core.csproj", "{B2CE5A03-8786-4522-A3D3-6C4176586B8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Andy.X.Bridge.Core", "src\Andy.X.Bridge.Core\Andy.X.Bridge.Core.csproj", "{B2CE5A03-8786-4522-A3D3-6C4176586B8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Andy.X.Bridge.IO", "src\Andy.X.Bridge.IO\Andy.X.Bridge.IO.csproj", "{737EE02B-3022-4DC4-A0B7-E6DC35BF6829}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Andy.X.Bridge.IO", "src\Andy.X.Bridge.IO\Andy.X.Bridge.IO.csproj", "{737EE02B-3022-4DC4-A0B7-E6DC35BF6829}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
