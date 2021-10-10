@@ -42,7 +42,7 @@ namespace Andy.X.Bridge.Core.Utilities.Logging
             Console.ForegroundColor = generalColor;
         }
 
-        public static void ShowWelcomeTest()
+        public static void ShowWelcomeText()
         {
             var generalColor = Console.ForegroundColor;
             Trace.WriteLine("                   Starting Buildersoft Andy X Bridge");
